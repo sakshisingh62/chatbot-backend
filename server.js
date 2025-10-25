@@ -10,25 +10,25 @@ app.use(express.json());
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
 
-// ✅ Default route
+// Default route
 app.get("/", (req, res) => {
   res.send("Backend API is running!");
 });
 
-// ✅ AI route
+// AI route
 app.post("/ask", async (req, res) => {
   try {
     const { question } = req.body;
     const result = await model.generateContent(question);
     const response = await result.response;
     const answer = response.text();
-
     res.json({ answer });
   } catch (error) {
     console.error("Gemini API Error:", error);
-    res.status(500).json({ error: "Failed to get AI response: " + error.message });
+    res.status(500).json({ error: "AI Error: " + error.message });
   }
 });
 
-// ✅ Export app instead of app.listen()
-module.exports = app;
+// ✅ Wrap Express app for Vercel
+const serverless = require("serverless-http");
+module.exports = serverless(app);
