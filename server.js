@@ -78,6 +78,6 @@ server.on('error', (err) => {
     process.exit(1);
 });
 
-server.listen(PORT, () => {
-    console.log(`server is running on port ${PORT}`);
+app.get('/', (req, res) => {
+  res.send('Backend API is running!');
 });
